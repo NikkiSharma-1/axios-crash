@@ -1,21 +1,50 @@
-const path = require('path');
+const Product = require('../models/product');
 
-const express = require('express');
+exports.getProducts = (req, res, next) => {
+  Product.fetchAll(products => {
+    res.render('shop/product-list', {
+      prods: products,
+      pageTitle: 'All Products',
+      path: '/products'
+    });
+  });
+};
 
-const shopController = require('../controllers/shop');
+exports.getProduct=(req,res,next) => {
+	const prodId=req.params.productId;
+	Product.findById(prodId,product => {
+		console.log(product);
+	});
+	res.redirect('/');
+};
 
-const router = express.Router();
+exports.getIndex = (req, res, next) => {
+  Product.fetchAll(products => {
+    res.render('shop/index', {
+      prods: products,
+      pageTitle: 'Shop',
+      path: '/'
+    });
+  });
+};
 
-router.get('/', shopController.getIndex);
+exports.getCart = (req, res, next) => {
+  res.render('shop/cart', {
+    path: '/cart',
+    pageTitle: 'Your Cart'
+  });
+};
 
-router.get('/products', shopController.getProducts);
+exports.getOrders = (req, res, next) => {
+  res.render('shop/orders', {
+    path: '/orders',
+    pageTitle: 'Your Orders'
+  });
+};
 
-router.get('/products/:productId', shopController.getProduct);
-
-router.get('/cart', shopController.getCart);
-
-router.get('/orders', shopController.getOrders);
-
-router.get('/checkout', shopController.getCheckout);
-
-module.exports = router;
+exports.getCheckout = (req, res, next) => {
+  res.render('shop/checkout', {
+    path: '/checkout',
+    pageTitle: 'Checkout'
+  });
+};
